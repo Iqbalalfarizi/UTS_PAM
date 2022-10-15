@@ -47,9 +47,11 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: '#f9c2ff',
-    padding: 20,
+    padding: 14,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderColor: '#000',
+    borderWidth: 2,
   },
   title: {
     fontSize: 32,
