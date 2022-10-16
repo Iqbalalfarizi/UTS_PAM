@@ -1,59 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import * as Contacts from 'expo-contacts';
-const Item = ({ title }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import * as Contacts from "expo-contacts";
+import ContactsArr from "./components/ContactsArr";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import Detail from "./components/Detail";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+export default function App(props) {
   const [contacts, setContacts] = useState();
-  const renderItem = ({ item }) => (
-    <Item title={item.name} />
-  );
   useEffect(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
-      if (status === 'granted') {
+      if (status === "granted") {
         const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.Emails],
+          fields: [Contacts.Fields.PhoneNumbers],
         });
-
         if (data.length > 0) {
-          const contact = data[10];
-          console.log(contact);
           setContacts(data);
         }
       }
     })();
   }, []);
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={contacts}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Contacts"
+          options={{
+            headerStyle: {
+              backgroundColor: "#475569",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontSize: 24,
+              fontWeight: "bold",
+            },
+            headerTitleAlign: "center",
+          }}
+        >
+          {(props) => <ContactsArr {...props} contacts={contacts} />}
+        </Stack.Screen>
+        <Stack.Screen
+          name="Details"
+          component={Detail}
+          options={{
+            headerStyle: {
+              backgroundColor: "#475569",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontSize: 24,
+              fontWeight: "bold",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 14,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderColor: '#000',
-    borderWidth: 2,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
