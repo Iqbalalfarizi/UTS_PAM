@@ -3,7 +3,6 @@ import React from "react";
 
 const Detail = ({ route }) => {
   const { contact } = route.params;
-  console.log(contact);
   return (
     <View style={styles.container}>
       <View style={styles.text}>
@@ -21,11 +20,10 @@ export default Detail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 0,
+    
     backgroundColor: "#e2e8f0",
   },
   text: {
-    marginTop: 30,
     marginHorizontal: 10,
     backgroundColor: "#d4d4d8",
     padding: 10,
